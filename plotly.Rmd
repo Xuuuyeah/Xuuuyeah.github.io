@@ -21,6 +21,7 @@ Extracting data from 2010, randomly selecting 1000 samples
 ```{r}
 data("ny_noaa")
 
+set.seed(123)
 nynoaadat_2010 = ny_noaa |>
   mutate(tmax = as.numeric(tmax) / 10, 
          tmin = as.numeric(tmin) / 10,
@@ -33,24 +34,23 @@ nynoaadat_2010 = ny_noaa |>
   filter(snow >= 0 | is.na(snow)) |>
   filter(year == "2010") |>
   drop_na(prcp, snow, tmax, tmin) |>
-  sample_n(1000)
+  sample_n(3000)
 ```
 
-Findal data frame:
+Final data frame:
 ```{r}
 head(nynoaadat_2010)
 ```
 
 ## Monthly precipitation
 
-Compute average monthly total precipitation per station for bar plot
+Estimate (monthly = daily * 30) average monthly total precipitation per station for bar plot
 
 ```{r}
 monthly_prcp = nynoaadat_2010 |>
-  group_by(id, month) |>
-  summarise(prcp_month_station = sum(prcp)) |>
   group_by(month) |>
-  summarise(prcp_per_station = mean(prcp_month_station))
+  summarise(daily_prcp = mean(prcp))  |>
+  mutate(avg_monthly_prcp = 30 * daily_prcp)
 ```
 
 Final data frame
@@ -77,8 +77,7 @@ nynoaadat_2010 |>
 ```{r}
 nynoaadat_2010 |>
   mutate(
-    month = as.factor(month)
-  ) |>
+    month = factor(month, levels = 1:12, labels = month.name)) |>
   plot_ly(
     y = ~tmax, x = ~month, color = ~month,
     type = "box", colors = "viridis"
@@ -89,9 +88,11 @@ nynoaadat_2010 |>
 
 ```{r}
 monthly_prcp |>
-  mutate(month = as.factor(month)) |>
+  mutate(
+    month = factor(month, levels = 1:12, labels = month.name)
+  ) |>
   plot_ly(
-    x = ~month, y = ~prcp_per_station, color = ~month,
+    x = ~month, y = ~avg_monthly_prcp, color = ~month,
     type = "bar", colors = "magma"
   )
 ```

@@ -18,6 +18,7 @@ library(p8105.datasets)
 ```{r}
 data("ny_noaa")
 
+set.seed(123)
 nynoaadat_2010 = ny_noaa |>
   mutate(tmax = as.numeric(tmax) / 10, 
          tmin = as.numeric(tmin) / 10,
@@ -30,21 +31,20 @@ nynoaadat_2010 = ny_noaa |>
   filter(snow >= 0 | is.na(snow)) |>
   filter(year == "2010") |>
   drop_na(prcp, snow, tmax, tmin) |>
-  sample_n(1000)
+  sample_n(3000)
 ```
 
 ```{r}
 monthly_prcp = nynoaadat_2010 |>
-  group_by(id, month) |>
-  summarise(prcp_month_station = sum(prcp)) |>
   group_by(month) |>
-  summarise(prcp_per_station = mean(prcp_month_station))
+  summarise(daily_prcp = mean(prcp))  |>
+  mutate(avg_monthly_prcp = 30 * daily_prcp)
 ```
 
-Column {data-width=650}
+Column {data-width=600}
 -----------------------------------------------------------------------
 
-### Tmax vs tmin
+### Chart A: Tmax vs tmin
 
 ```{r}
 nynoaadat_2010 |>
@@ -56,29 +56,30 @@ nynoaadat_2010 |>
   )
 ```
 
-Column {data-width=350}
+Column {data-width=400}
 -----------------------------------------------------------------------
 
-### Tmax vs month
+### Chart B: Tmax vs month
 
 ```{r}
 nynoaadat_2010 |>
   mutate(
-    month = as.factor(month)
-  ) |>
+    month = factor(month, levels = 1:12, labels = month.name)) |>
   plot_ly(
     y = ~tmax, x = ~month, color = ~month,
     type = "box", colors = "viridis"
   )
 ```
 
-### Prcp vs month
+### Chart C: Prcp vs month
 
 ```{r}
 monthly_prcp |>
-  mutate(month = as.factor(month)) |>
+  mutate(
+    month = factor(month, levels = 1:12, labels = month.name)
+  ) |>
   plot_ly(
-    x = ~month, y = ~prcp_per_station, color = ~month,
+    x = ~month, y = ~avg_monthly_prcp, color = ~month,
     type = "bar", colors = "magma"
   )
 ```
