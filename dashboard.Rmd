@@ -1,10 +1,10 @@
 ---
-title: "Problem 2"
+title: "Dashboard"
 output: 
-  html_document:
-    code_folding: hide
-    toc: true
-    toc_float: true
+  flexdashboard::flex_dashboard:
+    orientation: columns
+    vertical_layout: fill
+    source: embed
 ---
 
 ```{r setup, include=FALSE}
@@ -15,9 +15,6 @@ library(plotly)
 library(p8105.datasets)
 ```
 
-## Loading data
-
-Extracting data from 2010, randomly selecting 1000 samples
 ```{r}
 data("ny_noaa")
 
@@ -36,15 +33,6 @@ nynoaadat_2010 = ny_noaa |>
   sample_n(1000)
 ```
 
-Findal data frame:
-```{r}
-head(nynoaadat_2010)
-```
-
-## Monthly precipitation
-
-Compute average monthly total precipitation per station for bar plot
-
 ```{r}
 monthly_prcp = nynoaadat_2010 |>
   group_by(id, month) |>
@@ -53,14 +41,10 @@ monthly_prcp = nynoaadat_2010 |>
   summarise(prcp_per_station = mean(prcp_month_station))
 ```
 
-Final data frame
-```{r}
-head(monthly_prcp)
-```
+Column {data-width=650}
+-----------------------------------------------------------------------
 
-## Plot_ly
-
-### scatter plot
+### Tmax vs tmin
 
 ```{r}
 nynoaadat_2010 |>
@@ -72,7 +56,10 @@ nynoaadat_2010 |>
   )
 ```
 
-### box plot
+Column {data-width=350}
+-----------------------------------------------------------------------
+
+### Tmax vs month
 
 ```{r}
 nynoaadat_2010 |>
@@ -85,7 +72,7 @@ nynoaadat_2010 |>
   )
 ```
 
-### bar plot
+### Prcp vs month
 
 ```{r}
 monthly_prcp |>
@@ -95,3 +82,4 @@ monthly_prcp |>
     type = "bar", colors = "magma"
   )
 ```
+
