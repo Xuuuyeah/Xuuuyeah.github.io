@@ -1,9 +1,10 @@
 ---
 title: "Problem 2"
 output: 
-  flexdashboard::flex_dashboard:
-    orientation: columns
-    vertical_layout: fill
+  html_document:
+    code_folding: hide
+    toc: true
+    toc_float: true
 ---
 
 ```{r setup, include=FALSE}
@@ -32,6 +33,7 @@ nynoaadat_2010 = ny_noaa |>
   filter(year == "2010") |>
   drop_na(prcp, snow, tmax, tmin) 
 ```
+
 ## Compute average monthly total precipitation per station for bar plot
 
 ```{r}
@@ -81,7 +83,3 @@ monthly_prcp |>
     type = "bar", colors = "magma"
   )
 ```
-
-
-
-

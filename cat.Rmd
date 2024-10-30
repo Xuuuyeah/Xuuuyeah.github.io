@@ -1,0 +1,17 @@
+---
+title: "My cat - huihui"
+output: 
+  html_document:
+    toc: true
+    toc_float: true
+---
+
+
+He is afraid of sunshine.
+
+<img src="images/sunshine.JPG" style="width:50%">
+
+
+or sometimes he got punched by other cats
+
+<img src="images/punch.JPG" style="width:50%">

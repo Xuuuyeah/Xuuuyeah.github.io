@@ -1,0 +1,24 @@
+---
+title: "Yiran Xu's website"
+output: 
+  html_document:
+    code_folding: hide
+    toc: true
+    toc_float: true
+---
+
+# Welcome to my awesome website!
+
+In this page, I will walk you through me as myself. 
+
+I am Yiran Xu, I am a first year Master's student at Columbia University. I lead a happy life.
+
+If you want to see my profile, please click [here](about.html), or "About" button on the top.
+
+or
+
+If you are interested in my cat, please click [here](cat.html)
+
+Let's go!
+
+<img src="images/De_Bruyne.jpg" style="width:75%">
