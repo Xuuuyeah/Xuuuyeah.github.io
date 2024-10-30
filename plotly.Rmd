@@ -1,0 +1,87 @@
+---
+title: "Problem 2"
+output: 
+  flexdashboard::flex_dashboard:
+    orientation: columns
+    vertical_layout: fill
+---
+
+```{r setup, include=FALSE}
+library(flexdashboard)
+library(tidyverse)
+library(readr)
+library(plotly)
+library(p8105.datasets)
+```
+
+## Loading data and extracting data from 2010
+
+```{r}
+data("ny_noaa")
+
+nynoaadat_2010 = ny_noaa |>
+  mutate(tmax = as.numeric(tmax) / 10, 
+         tmin = as.numeric(tmin) / 10,
+         prcp = prcp / 10,
+         year = year(date),
+         month = month(date),
+         day = day(date)) |> 
+  select(year, month, day, everything(), -date, -snwd) |>
+  filter(tmax > tmin | is.na(tmax) | is.na(tmin)) |>
+  filter(snow >= 0 | is.na(snow)) |>
+  filter(year == "2010") |>
+  drop_na(prcp, snow, tmax, tmin) 
+```
+## Compute average monthly total precipitation per station for bar plot
+
+```{r}
+monthly_prcp = nynoaadat_2010 |>
+  group_by(id, month) |>
+  summarise(prcp_month_station = sum(prcp)) |>
+  group_by(month) |>
+  summarise(prcp_per_station = mean(prcp_month_station))
+
+monthly_prcp
+```
+
+## Plot_ly
+
+### box plot
+
+```{r}
+nynoaadat_2010 |>
+  mutate(
+    month = as.factor(month)
+  ) |>
+  plot_ly(
+    y = ~tmax, x = ~month, color = ~month,
+    type = "box", colors = "viridis"
+  )
+```
+
+### scatter plot
+
+```{r}
+nynoaadat_2010 |>
+  mutate(text_label = str_c("Precipitation:", prcp, "\nSnow:", snow)) |>
+  plot_ly(
+    y = ~tmax, x = ~tmin, text = ~text_label,
+    type = "scatter", mode = "markers",
+    color = ~as.factor(month), colors = "inferno"
+  )
+```
+
+### bar plot
+
+```{r}
+monthly_prcp |>
+  mutate(month = as.factor(month)) |>
+  plot_ly(
+    x = ~month, y = ~prcp_per_station, color = ~month,
+    type = "bar", colors = "magma"
+  )
+```
+
+
+
+
