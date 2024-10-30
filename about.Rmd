@@ -1,0 +1,21 @@
+---
+title: "About me"
+output: 
+  html_document:
+    code_folding: hide
+    toc: true
+    toc_float: true
+---
+
+Welcome to my self-introduction page, you can learn about my general information, my professional and academic experiences, as well as my hobbies.
+
+## Professional & academic experiences
+
+Here are links to my academic and professional experiences
+
+* [Professional experiences](images/professional.png)
+
+* [Academic experiences](images/academic.png)
+
+Please also refer to my [publication](file/publication.pdf), if you are interested
+
